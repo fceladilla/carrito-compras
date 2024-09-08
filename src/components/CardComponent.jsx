@@ -1,0 +1,62 @@
+import React, { useContext } from "react";
+import { useState } from "react";
+import "../styles/CardComponent.css";
+import { CarritoContext } from "../context/CarritoContext";
+import { useEffect } from "react";
+
+export const CardComponent = ({
+  id,
+  image,
+  title,
+  description,
+  price,
+  handlerAdd,
+  handlerRemove,
+}) => {
+  const { listaCompras } = useContext(CarritoContext);
+  const [added, setAdded] = useState(false);
+
+  const addProduct = () => {
+    handlerAdd();
+    setAdded(true);
+  };
+  const removeProduct = () => {
+    handlerRemove();
+    setAdded(false);
+  };
+
+  const checkAdded = () => {
+    const boolean = listaCompras.some((producto) => producto.id == id);
+    setAdded(boolean);
+  };
+
+  useEffect(() => {
+    checkAdded();
+  }, []);
+
+  return (
+    <div className="card">
+      <img src={image} alt={title} className="card-img" />
+
+      <div className="card-content">
+        <h3 className="card-title">{title}</h3>
+        <p className="card-description">{description}</p>
+        <p className="card-price">${price}</p>
+
+        {added ? (
+          <button
+            type="button"
+            className="remove-button"
+            onClick={removeProduct}
+          >
+            Quitar del carrito
+          </button>
+        ) : (
+          <button type="button" className="add-button" onClick={addProduct}>
+            Agregar al carrito
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
